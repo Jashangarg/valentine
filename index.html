@@ -2,50 +2,94 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Be My Valentine 💖</title>
-
+<title>Surprise ❤️</title>
 <style>
-    body {
-        height: 100vh;
+    html, body {
         margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        font-family: Arial, sans-serif;
         overflow: hidden;
+    }
+
+    /* --- START PAGE --- */
+    #startPage {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-family: Arial, sans-serif;
+        height: 100vh;
+        width: 100%;
         background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     }
 
-    /* BIG HEART */
+    #startButton {
+        padding: 20px 50px;
+        font-size: 28px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        background-color: #ff4d6d;
+        color: white;
+        transition: transform 0.2s;
+    }
+
+    #startButton:hover { transform: scale(1.1); }
+
+    /* --- VALENTINE PAGE --- */
+    #valentinePage {
+        display: none;
+        height: 100vh;
+        width: 100%;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
     .big-heart {
         position: absolute;
         font-size: 220px;
         opacity: 0.25;
         animation: pulse 2s infinite;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         z-index: 1;
     }
 
     @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+        0% { transform: translate(-50%, -50%) scale(1); }
+        50% { transform: translate(-50%, -50%) scale(1.1); }
+        100% { transform: translate(-50%, -50%) scale(1); }
     }
 
-    h1 {
-        color: white;
-        font-size: 2.5rem;
-        margin-bottom: 30px;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    #valentineContent {
+        position: relative;
         z-index: 2;
-        text-align: center;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #valentineContent h1 {
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        margin-bottom: 30px;
     }
 
     .buttons {
         position: relative;
-        width: 300px;
-        height: 200px;
-        z-index: 2;
+        display: flex;
+        justify-content: space-around;
+        width: 250px;
     }
 
     button {
@@ -57,24 +101,12 @@
         transition: transform 0.2s;
     }
 
-    button:hover {
-        transform: scale(1.1);
-    }
+    button:hover { transform: scale(1.1); }
 
-    #yes {
-        background-color: #4CAF50;
-        color: white;
-    }
+    #yes { background-color: #4CAF50; color: white; }
+    #no { background-color: #f44336; color: white; position: fixed; }
 
-    #no {
-        background-color: #f44336;
-        color: white;
-        position: absolute;
-        left: 120px;
-        top: 80px;
-    }
-
-    /* Floating hearts & flowers */
+    /* Floating hearts/flowers */
     .float {
         position: absolute;
         font-size: 24px;
@@ -84,67 +116,74 @@
     }
 
     @keyframes floatUp {
-        from {
-            transform: translateY(100vh);
-            opacity: 1;
-        }
-        to {
-            transform: translateY(-10vh);
-            opacity: 0;
-        }
+        from { transform: translateY(100vh); opacity: 1; }
+        to { transform: translateY(-10vh); opacity: 0; }
     }
 </style>
 </head>
-
 <body>
 
-<div class="big-heart">❤️</div>
+<!-- START PAGE -->
+<div id="startPage">
+    <button id="startButton" onclick="startValentine()">Start</button>
+</div>
 
-<h1>Will you be my Valentine? 💕</h1>
-
-<div class="buttons">
-    <button id="yes" onclick="yesClicked()">Yes 💖</button>
-    <button id="no" onmouseover="moveNo()">No 😢</button>
+<!-- VALENTINE PAGE -->
+<div id="valentinePage">
+    <div class="big-heart">❤️</div>
+    <div id="valentineContent">
+        <h1>Will you be my Valentine? 💕</h1>
+        <div class="buttons">
+            <button id="yes" onclick="yesClicked()">Yes 💖</button>
+            <button id="no" onmouseover="moveNo()">No 😢</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    function moveNo() {
-        const noBtn = document.getElementById("no");
-        const container = document.querySelector(".buttons");
-
-        const maxX = container.clientWidth - noBtn.offsetWidth;
-        const maxY = container.clientHeight - noBtn.offsetHeight;
-
-        noBtn.style.left = Math.random() * maxX + "px";
-        noBtn.style.top = Math.random() * maxY + "px";
+    // --- SHOW VALENTINE PAGE ---
+    function startValentine() {
+        document.getElementById('startPage').style.display = 'none';
+        document.getElementById('valentinePage').style.display = 'flex';
     }
 
+    // --- YES BUTTON ---
     function yesClicked() {
-        document.body.innerHTML = `
-            <div class="big-heart">❤️</div>
+        document.getElementById('valentineContent').innerHTML = `
             <h1>Yayyy! 💖</h1>
-            <h1>You’re my Valentine 🌹</h1>
+            <h1>You made my day 🥰</h1>
         `;
     }
 
-    const emojis = ["❤️", "💖", "💕", "🌸", "🌹"];
+    // --- NO BUTTON RANDOM MOVEMENT ---
+    function moveNo() {
+        const noBtn = document.getElementById("no");
+        const maxX = window.innerWidth - noBtn.offsetWidth;
+        const maxY = window.innerHeight - noBtn.offsetHeight;
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+    }
 
+    // Move No button randomly every 1.5 seconds for extra challenge
+    setInterval(moveNo, 1500);
+
+    // --- FLOATING HEARTS/FLOWERS ---
+    const emojis = ["❤️", "💖", "💕", "🌸", "🌹"];
     function createFloatingEmoji() {
         const emoji = document.createElement("div");
         emoji.classList.add("float");
         emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-
         emoji.style.left = Math.random() * 100 + "vw";
         emoji.style.animationDuration = (3 + Math.random() * 4) + "s";
         emoji.style.fontSize = (20 + Math.random() * 20) + "px";
-
         document.body.appendChild(emoji);
-
         setTimeout(() => emoji.remove(), 7000);
     }
-
     setInterval(createFloatingEmoji, 300);
 </script>
 
 </body>
 </html>
+
